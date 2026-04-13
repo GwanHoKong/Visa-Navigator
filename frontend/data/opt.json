@@ -1,0 +1,25 @@
+{
+  "title": "OPT (Optional Practical Training)",
+  "description": "Post-graduation work authorization for F-1 students.",
+  "timeline": [
+    { "date": "90 days before graduation", "description": "Earliest you can apply for OPT" },
+    { "date": "60 days after graduation", "description": "Latest you can apply for OPT" },
+    { "date": "Upon approval", "description": "Receive EAD card (Employment Authorization Document)" },
+    { "date": "12 months", "description": "Standard OPT duration" }
+  ],
+  "checklist": [
+    "Request DSO recommendation in SEVIS",
+    "Complete Form I-765 (Application for Employment Authorization)",
+    "Gather required documents (passport, I-20, I-94, photos)",
+    "Pay USCIS filing fee",
+    "Mail application to USCIS or file online",
+    "Receive EAD card",
+    "Report employment to DSO within 10 days of start"
+  ],
+  "requirements": [
+    "Valid F-1 status for at least one full academic year",
+    "Employment must be directly related to major field of study",
+    "Must apply within the 90-day pre-completion or 60-day post-completion window",
+    "Cannot exceed 90 days of unemployment during 12-month OPT period"
+  ]
+}

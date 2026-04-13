@@ -1,0 +1,27 @@
+{
+  "title": "STEM OPT Extension",
+  "description": "24-month extension of post-completion OPT for STEM degree holders.",
+  "timeline": [
+    { "date": "90 days before OPT expires", "description": "Earliest you can apply for STEM OPT extension" },
+    { "date": "Before OPT expiration", "description": "Must file before current OPT expires" },
+    { "date": "Upon approval", "description": "Receive new EAD card with 24-month extension" },
+    { "date": "24 months", "description": "STEM OPT extension duration (total 36 months with initial OPT)" }
+  ],
+  "checklist": [
+    "Confirm your degree is on the STEM Designated Degree Program list",
+    "Secure employment with an E-Verify registered employer",
+    "Complete Form I-983 (Training Plan) with employer",
+    "Request DSO recommendation for STEM extension in SEVIS",
+    "Complete Form I-765 with STEM OPT extension category",
+    "File application with USCIS before OPT expiration",
+    "Submit 6-month and 12-month I-983 evaluations to DSO"
+  ],
+  "requirements": [
+    "Hold a bachelor's, master's, or doctoral degree in a STEM field",
+    "Currently in a valid post-completion OPT period",
+    "Employer must be enrolled in E-Verify",
+    "Must have a formal training plan (Form I-983) signed by employer",
+    "Cannot exceed 150 days of unemployment during 24-month extension",
+    "Must report to DSO every 6 months"
+  ]
+}

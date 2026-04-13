@@ -1,0 +1,74 @@
+{
+  "steps": [
+    {
+      "icon": "💬",
+      "timing": "Before starting the process",
+      "title": "Verify Your STEM Eligibility",
+      "description": "Confirm that your degree is on the official STEM Designated Degree Program list and you have valid OPT.",
+      "tips": ["Check the STEM Designated Degree Program list on ICE website", "Your degree must match exactly with the CIP code", "You must currently be on approved OPT", "Talk to your DSO to confirm eligibility"]
+    },
+    {
+      "icon": "🏢",
+      "timing": "Before OPT expires (ideally 3-4 months before)",
+      "title": "Find an E-Verify Employer",
+      "description": "Your employer must be enrolled in E-Verify to sponsor your STEM OPT extension.",
+      "tips": ["Employer must be enrolled in E-Verify", "Job must be directly related to your STEM degree", "Part-time work (20+ hours/week) is acceptable", "You can have multiple employers if all use E-Verify"]
+    },
+    {
+      "icon": "📝",
+      "timing": "90 days before OPT expires",
+      "title": "Complete Form I-983 with Your Employer",
+      "description": "Work with your employer to complete the Training Plan (Form I-983). This outlines your learning objectives.",
+      "tips": ["Both you and employer must sign", "Learning objectives must relate to your degree", "Include supervisor contact information", "Employer must commit to evaluation requirements"]
+    },
+    {
+      "icon": "📄",
+      "timing": "After I-983 completion",
+      "title": "Request DSO Recommendation in SEVIS",
+      "description": "Bring your completed I-983 to your DSO. They will recommend the STEM extension in SEVIS and issue a new I-20.",
+      "tips": ["Schedule appointment early", "Bring completed I-983 and current EAD", "DSO will update your SEVIS record", "Get your new I-20 with STEM recommendation"]
+    },
+    {
+      "icon": "📋",
+      "timing": "Within 60 days of receiving new I-20",
+      "title": "Prepare STEM OPT Application (Form I-765)",
+      "description": "Complete Form I-765 with the STEM OPT extension category code.",
+      "tips": ["Category is (c)(3)(C) for STEM extension", "Include new I-20 with STEM recommendation", "Copy of I-983 Training Plan", "Filing fee ($410 as of 2026)"]
+    },
+    {
+      "icon": "📮",
+      "timing": "Before current OPT expires",
+      "title": "File Application with USCIS",
+      "description": "Mail your complete STEM OPT application to USCIS before your current OPT period expires.",
+      "tips": ["Must be received before OPT expiration", "Use certified mail with tracking", "Keep copies of everything", "You get automatic 180-day extension while pending"]
+    },
+    {
+      "icon": "⏳",
+      "timing": "2-5 months after filing",
+      "title": "Wait for New EAD Card",
+      "description": "USCIS will process your application and mail your new EAD card with the 24-month extension.",
+      "tips": ["Continue working on auto-extension", "Track your case online", "Update address if you move", "Don't leave the US while pending (risky)"]
+    },
+    {
+      "icon": "📊",
+      "timing": "6 months after STEM start",
+      "title": "Submit 6-Month I-983 Evaluation",
+      "description": "Complete and submit your first I-983 evaluation to your DSO within 10 days of the 6-month mark.",
+      "tips": ["Both you and employer must sign evaluation", "Review and update learning objectives", "Report any changes in employment", "Keep copies for your records"]
+    },
+    {
+      "icon": "📊",
+      "timing": "12 months after STEM start",
+      "title": "Submit 12-Month I-983 Evaluation",
+      "description": "Complete your second I-983 evaluation and submit to your DSO.",
+      "tips": ["Same process as 6-month evaluation", "Update progress on learning objectives", "Report any employer or position changes"]
+    },
+    {
+      "icon": "🎯",
+      "timing": "During STEM OPT period",
+      "title": "Plan Your Next Steps",
+      "description": "Start planning for H-1B or other long-term visa options during your STEM extension period.",
+      "tips": ["H-1B registration typically in March", "Talk to employer about sponsorship early", "Consider consulting an immigration attorney", "Keep all documents organized"]
+    }
+  ]
+}

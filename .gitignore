@@ -1,0 +1,40 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+*.egg
+.venv/
+venv/
+
+# Raw data (too large for git)
+data/*.csv
+
+# Node
+node_modules/
+.next/
+out/
+.vercel
+
+# Environment files
+.env
+.env.local
+.env.production.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Model artifacts are tracked (needed for deployment)
+# backend/models/*.joblib
+# backend/lookups/*.csv

@@ -1,0 +1,25 @@
+{
+  "title": "H1B Visa",
+  "description": "Specialty occupation work visa for professional-level jobs requiring at least a bachelor's degree.",
+  "timeline": [
+    { "date": "March 1–17 (annual)", "description": "H1B electronic registration period (lottery)" },
+    { "date": "March 31", "description": "Lottery results announced" },
+    { "date": "90 days after selection", "description": "Deadline to file full H1B petition" },
+    { "date": "October 1", "description": "Earliest H1B start date" }
+  ],
+  "process": [
+    "Employer registers for H1B lottery during registration period",
+    "If selected in lottery, employer files Form I-129 petition",
+    "USCIS adjudicates petition (may issue RFE)",
+    "Upon approval, H1B status begins October 1",
+    "Cap-gap: OPT/STEM OPT auto-extended until October 1 if selected"
+  ],
+  "requirements": [
+    "Job must qualify as a 'specialty occupation'",
+    "Position requires at minimum a bachelor's degree in a specific field",
+    "Applicant must hold the required degree or equivalent",
+    "Employer must pay at least the prevailing wage for the position",
+    "Employer must file a Labor Condition Application (LCA) with DOL",
+    "Annual cap: 65,000 regular + 20,000 U.S. master's exemption"
+  ]
+}

@@ -1,0 +1,60 @@
+{
+  "steps": [
+    {
+      "icon": "💬",
+      "timing": "90-120 days before graduation",
+      "title": "Talk to Your International Student Office",
+      "description": "Schedule an appointment with your DSO (Designated School Official) to discuss your OPT plans and eligibility.",
+      "tips": ["Bring your questions and timeline", "Confirm your F-1 status is valid", "Ask about school-specific requirements"]
+    },
+    {
+      "icon": "📝",
+      "timing": "60-90 days before graduation",
+      "title": "Submit OPT Recommendation Request",
+      "description": "Request your DSO to recommend you for OPT in SEVIS. They'll update your I-20 with the OPT recommendation.",
+      "tips": ["Fill out any required school forms", "Submit all requested documents", "Keep copies of everything"]
+    },
+    {
+      "icon": "📄",
+      "timing": "After DSO approval",
+      "title": "Receive Your OPT I-20",
+      "description": "Your DSO will issue a new I-20 with the OPT recommendation. This is crucial for your application!",
+      "tips": ["Check all information is correct", "Note the date on page 1 - you have 30 days to file", "Make several copies for your records"]
+    },
+    {
+      "icon": "📋",
+      "timing": "Within 30 days of receiving OPT I-20",
+      "title": "Prepare Your OPT Application (Form I-765)",
+      "description": "Gather all required documents and complete the Employment Authorization Document (EAD) application.",
+      "tips": ["Use Form I-765 (check for latest version)", "Prepare passport-style photos (2)", "Copy of all I-20s, passport, visa, I-94", "Personal check or money order ($410 as of 2026)"]
+    },
+    {
+      "icon": "📮",
+      "timing": "No later than 30 days after OPT I-20 date",
+      "title": "Mail Your OPT Application to USCIS",
+      "description": "Send your complete application package to the correct USCIS lockbox address.",
+      "tips": ["Use certified mail with tracking", "Double-check you have all documents", "Keep copies of your entire application", "Note the mailing date for your records"]
+    },
+    {
+      "icon": "⏳",
+      "timing": "2-4 weeks after mailing",
+      "title": "Wait for Receipt Notice (I-797)",
+      "description": "USCIS will send you a receipt notice confirming they received your application.",
+      "tips": ["Update your address if you move", "Save the receipt number for tracking", "You can check status online with this number"]
+    },
+    {
+      "icon": "✅",
+      "timing": "90-120 days after filing (average)",
+      "title": "Receive Your EAD Card",
+      "description": "Your Employment Authorization Document (work permit) will arrive by mail!",
+      "tips": ["Don't start work until you receive your EAD", "Check the validity dates on your card", "Make copies and keep your EAD safe", "You can start working the day you receive it!"]
+    },
+    {
+      "icon": "💼",
+      "timing": "Within 10 days of employment changes",
+      "title": "Report Your Employment",
+      "description": "Inform your DSO within 10 days of starting a job or changing employers through the SEVP Portal.",
+      "tips": ["Keep your SEVP Portal login accessible", "Report employer name, address, start date", "Update if you change jobs", "Unemployment cannot exceed 90 days total"]
+    }
+  ]
+}

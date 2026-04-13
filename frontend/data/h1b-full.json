@@ -1,0 +1,24 @@
+{
+  "timeline": [
+    { "date": "January - February", "title": "Employer Preparation", "description": "Your employer prepares to sponsor you. Discuss H-1B plans with your manager/HR.", "color": "blue" },
+    { "date": "Early March", "title": "Registration Period Opens", "description": "USCIS opens electronic registration (usually first week of March for ~14 days). Employer registers you online ($10 fee per registration).", "color": "blue" },
+    { "date": "Late March", "title": "Lottery Selection ⭐", "description": "USCIS conducts lottery and notifies selected registrations. Not everyone gets selected!", "color": "yellow" },
+    { "date": "April - June", "title": "Petition Filing (If Selected)", "description": "If selected, employer has 90 days to file full H-1B petition with USCIS (filing fee: ~$2,500-$5,000+).", "color": "blue" },
+    { "date": "April - September", "title": "USCIS Processing", "description": "USCIS reviews petition. May request additional evidence (RFE). Processing can take 2-6+ months (premium processing available for faster decision).", "color": "purple" },
+    { "date": "October 1", "title": "H-1B Start Date 🎉", "description": "If approved, your H-1B status begins! This is the earliest you can start working on H-1B.", "color": "green" }
+  ],
+  "process": [
+    { "icon": "🏢", "title": "Find an H-1B Sponsor", "description": "Your employer must be willing and able to sponsor your H-1B visa.", "points": ["Discuss sponsorship early in interview/employment", "Many large companies have H-1B programs", "Employer bears most filing costs", "Some cap-exempt employers (universities, nonprofits) have no lottery"] },
+    { "icon": "📄", "title": "Labor Condition Application (LCA)", "description": "Employer files LCA with Department of Labor to certify wages and working conditions.", "points": ["Must pay prevailing wage for your position", "DOL approval typically takes 7-10 days", "Required before H-1B filing", "Posted at workplace for employee notice"] },
+    { "icon": "🎲", "title": "Registration & Lottery (March)", "description": "Employer registers you during the registration period. USCIS conducts random lottery.", "points": ["Electronic registration only ($10 fee)", "Can be registered by multiple employers (increases odds)", "Master's degree holders get two lottery chances", "Selection doesn't guarantee approval"] },
+    { "icon": "📝", "title": "Petition Filing (If Selected)", "description": "If selected, employer files Form I-129 with supporting documents and fees.", "points": ["Must file within 90 days of selection", "Include degree certificates, job description, LCA", "Premium processing available (~$2,805 for 15-day decision)", "Regular processing: 2-6 months or more"] },
+    { "icon": "⏳", "title": "USCIS Adjudication", "description": "USCIS reviews the petition. They may issue a Request for Evidence (RFE).", "points": ["Respond to RFEs promptly and thoroughly", "Approval results in I-797 notice", "Denial can be appealed in some cases", "Premium processing guarantees 15-day response"] },
+    { "icon": "✅", "title": "H-1B Status Begins (Oct 1)", "description": "Upon approval, your H-1B status begins on October 1. Cap-gap extends OPT until then.", "points": ["Valid for initial 3-year period", "Can be extended for another 3 years", "Allows dual intent (can apply for green card)", "Must work for sponsoring employer only"] }
+  ],
+  "requirements": [
+    { "title": "Education", "items": ["Bachelor's degree or higher (or equivalent)", "Degree must be related to the specialty occupation", "Foreign degrees must be evaluated for US equivalency", "Some experience can substitute for education (3 years work = 1 year study)"] },
+    { "title": "Specialty Occupation", "items": ["Job requires theoretical and practical application of specialized knowledge", "Position normally requires bachelor's degree minimum", "Common fields: IT, Engineering, Science, Healthcare, Finance, Architecture", "Job duties must match your degree field"] },
+    { "title": "Employer Requirements", "items": ["Must be US employer (or US operations)", "Employer-employee relationship must exist", "Must pay prevailing wage for the position", "Must file LCA and maintain compliance"] },
+    { "title": "Costs (Employer-Paid)", "items": ["Registration fee: $10", "Base filing fee: $460", "ACWIA fee: $750-$1,500 (based on company size)", "Fraud Prevention fee: $500 (if applicable)", "Premium processing (optional): ~$2,805", "Attorney fees (varies): $2,000-$5,000+"] }
+  ]
+}
