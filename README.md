@@ -3,6 +3,9 @@
 Full-stack web app helping international students navigate the U.S. work visa process (OPT → STEM OPT → H-1B).  
 Features include visa guides with checklists, interactive timelines, and an ML-powered H-1B sponsorship risk assessment tool.
 
+> 🌐 **Live Demo:** [https://visanavigator-black.vercel.app](https://visanavigator-black.vercel.app)  
+> 🔗 **Backend API:** [https://visa-navigator.onrender.com](https://visa-navigator.onrender.com)
+
 ## Project Structure
 
 ```
