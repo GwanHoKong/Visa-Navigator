@@ -31,10 +31,13 @@ async def lifespan(app: FastAPI):
     """Load model and lookup tables once at startup."""
     print("Loading model and lookup tables...")
 
-    # ML model pipeline (StandardScaler + LogisticRegression)
-    model_path = MODELS_DIR / "h1b_model.joblib"
-    app_state["model"] = joblib.load(model_path)
-    print(f"  Model loaded from {model_path}")
+    # H1B Analytics dual-track model artifacts.
+    risk_model_path = MODELS_DIR / "h1b_high_risk_model.joblib"
+    approval_model_path = MODELS_DIR / "h1b_approval_rate_model.joblib"
+    app_state["risk_model"] = joblib.load(risk_model_path)
+    app_state["approval_model"] = joblib.load(approval_model_path)
+    print(f"  High-risk model loaded from {risk_model_path}")
+    print(f"  Approval-rate model loaded from {approval_model_path}")
 
     # Model metadata (feature columns, metrics, etc.)
     meta_path = MODELS_DIR / "model_meta.joblib"

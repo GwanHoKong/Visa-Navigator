@@ -215,9 +215,46 @@ export default function PredictPage() {
             {/* Top Disclaimer */}
             <div className="disclaimer" style={{ marginBottom: "1.5rem", marginTop: 0 }}>
               <p>
-                <strong>Data Source Disclaimer:</strong> This analysis is based on 2021-2025 USCIS public H-1B employer data (historical approval records).
+                <strong>Data Source Disclaimer:</strong> This analysis is based on FY2021-FY2026 USCIS public H-1B employer data and the H1B Sponsorship Analytics modeling pipeline.
                 It does not guarantee individual approval outcomes. Always consult a qualified immigration attorney for personalized advice.
               </p>
+            </div>
+
+            {/* Model summary */}
+            <div className="card" style={{ marginBottom: "1.5rem", padding: "1.5rem" }}>
+              <h3 style={{ fontWeight: 700, color: "var(--navy)", marginBottom: "0.35rem" }}>
+                H-1B Sponsorship Model Result
+              </h3>
+              <p style={{ fontSize: "0.82rem", color: "var(--gray-500)", marginBottom: "1.25rem" }}>
+                Dual-track model: expected approval-rate regression plus High-risk screening.
+              </p>
+
+              <div className="predict-form-grid">
+                <MetricTile
+                  label="Expected Approval Rate"
+                  value={`${((result.expected_approval_rate ?? result.probability) * 100).toFixed(1)}%`}
+                  tone={(result.expected_approval_rate ?? result.probability) >= 0.95 ? "green" : "blue"}
+                  sublabel="XGBoost regression estimate"
+                />
+                <MetricTile
+                  label="High-risk Probability"
+                  value={`${(result.high_risk_probability * 100).toFixed(1)}%`}
+                  tone={result.risk_level === "high" ? "red" : result.risk_level === "medium" ? "yellow" : "green"}
+                  sublabel={`${result.risk_level?.toUpperCase()} screening tier`}
+                />
+                <MetricTile
+                  label="Industry Risk Tier"
+                  value={result.industry_risk_tier || "Unknown"}
+                  tone={result.industry_risk_tier === "High" ? "red" : result.industry_risk_tier === "Medium" ? "yellow" : "green"}
+                  sublabel={result.industry_label}
+                />
+              </div>
+
+              {result.model_summary && (
+                <p style={{ fontSize: "0.75rem", color: "var(--gray-400)", marginTop: "1rem" }}>
+                  Source: {result.model_summary.source_project}. Trained on FY{result.model_summary.train_years?.join(", FY")}; validated on FY{result.model_summary.validation_year}.
+                </p>
+              )}
             </div>
 
             {/* Three-bar breakdown */}
@@ -226,7 +263,7 @@ export default function PredictPage() {
                 📊 H-1B Approval Rate Breakdown
               </h3>
               <p style={{ fontSize: "0.82rem", color: "var(--gray-500)", marginBottom: "1.25rem" }}>
-                Based on historical USCIS data (2021-2025). Each bar shows the approval rate for your selected parameters.
+                Based on historical USCIS data. Each bar shows the approval rate for your selected parameters.
               </p>
 
               {/* Industry Rate */}
@@ -253,7 +290,7 @@ export default function PredictPage() {
                   📍 Your combination is in the <strong>top {Math.max(1, Math.round(100 - result.percentile))}%</strong> of all employer-industry combinations in our database.
                 </p>
                 <p style={{ fontSize: "0.75rem", color: "var(--gray-500)", margin: "0.25rem 0 0" }}>
-                  Percentile based on combined industry, state, and employer approval rates vs. {(142509).toLocaleString()} employers
+                  Percentile based on employer approval-rate distribution in the USCIS dataset
                 </p>
               </div>
 
@@ -398,6 +435,26 @@ function RateBar({ label, rate, avgRate, avgLabel, sublabel }) {
         <div className="risk-bar-fill" style={{ width: `${Math.min(rate * 100, 100)}%`, background: barColor, transition: "width 0.5s ease" }} />
       </div>
       {sublabel && <p style={{ fontSize: "0.75rem", color: "var(--gray-400)", marginTop: "0.2rem" }}>{sublabel}</p>}
+    </div>
+  );
+}
+
+
+/* === Metric Tile Component === */
+function MetricTile({ label, value, tone, sublabel }) {
+  const colorMap = {
+    green: "var(--green)",
+    blue: "var(--blue-primary)",
+    yellow: "var(--yellow)",
+    red: "var(--red)",
+  };
+  const color = colorMap[tone] || "var(--blue-primary)";
+
+  return (
+    <div style={{ border: "1px solid var(--blue-border)", borderRadius: "var(--radius-sm)", padding: "1rem", background: "var(--white)" }}>
+      <p style={{ fontSize: "0.78rem", color: "var(--gray-500)", margin: "0 0 0.35rem", fontWeight: 600 }}>{label}</p>
+      <p style={{ fontSize: "1.6rem", color, margin: 0, fontWeight: 800 }}>{value}</p>
+      {sublabel && <p style={{ fontSize: "0.74rem", color: "var(--gray-400)", margin: "0.25rem 0 0" }}>{sublabel}</p>}
     </div>
   );
 }

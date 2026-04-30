@@ -1,19 +1,19 @@
 """
-POST /api/predict -- H1B approval risk assessment endpoint.
-Returns detailed breakdown: industry rate, state rate, employer rate,
-national averages, and percentile ranking.
+POST /api/predict -- H1B sponsorship analytics endpoint.
 
-Error handling (from CLAUDE.md):
-- Industry with < 5 cases: 200 + low_confidence: true
-- Employer not found: 200 + employer_match: false, show industry/state risk only
-- Invalid/missing fields: 422 Validation Error
-- Server error: 500
+The app now uses the dual-track modeling structure from H1B-Sponsorship-Analytics:
+
+- Binary Logistic Regression estimates the probability that the selected profile
+  maps to a High Approval Risk Tier.
+- XGBoost Regression estimates the expected employer-year approval rate.
 """
 
+from typing import Optional
+
+import numpy as np
+import pandas as pd
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, field_validator
-from typing import Optional
-import numpy as np
 
 from state import app_state
 
@@ -47,6 +47,32 @@ NAICS_LABELS = {
     99: "Unclassified",
 }
 
+RISK_FEATURES = [
+    "fiscal_year",
+    "log_petitions",
+    "initial_share",
+    "continuation_share",
+    "missing_state_flag",
+    "missing_naics_flag",
+    "state",
+]
+
+REGRESSION_FEATURES = [
+    "fiscal_year",
+    "total_cases",
+    "log_petitions",
+    "initial_share",
+    "continuation_share",
+    "missing_state_flag",
+    "missing_naics_flag",
+    "industry_mean_rate",
+    "industry_std",
+    "industry_cv",
+    "industry_employer_count",
+    "industry_total_cases",
+    "state",
+]
+
 
 class PredictRequest(BaseModel):
     industry: str
@@ -55,143 +81,175 @@ class PredictRequest(BaseModel):
 
     @field_validator("industry")
     @classmethod
-    def validate_industry(cls, v):
-        v = v.strip()
-        if not v:
+    def validate_industry(cls, value):
+        value = value.strip()
+        if not value:
             raise ValueError("industry is required")
-        return v
+        return value
 
     @field_validator("state")
     @classmethod
-    def validate_state(cls, v):
-        v = v.strip().upper()
-        if not v or len(v) != 2:
+    def validate_state(cls, value):
+        value = value.strip().upper()
+        if not value or len(value) != 2:
             raise ValueError("state must be a 2-letter abbreviation")
-        return v
+        return value
+
+
+def _risk_level(high_risk_probability: float) -> str:
+    if high_risk_probability >= 0.50:
+        return "high"
+    if high_risk_probability >= 0.25:
+        return "medium"
+    return "low"
+
+
+def _safe_float(row, column: str, default: float) -> float:
+    if row is None or column not in row.index:
+        return default
+    value = row[column]
+    if pd.isna(value):
+        return default
+    return float(value)
 
 
 @router.post("/predict")
 async def predict(request: PredictRequest):
     try:
-        model = app_state["model"]
+        risk_model = app_state["risk_model"]
+        approval_model = app_state["approval_model"]
+        model_meta = app_state["model_meta"]
         naics_df = app_state["naics_stats"]
         state_df = app_state["state_stats"]
         employer_df = app_state["employer_stats"]
     except KeyError:
-        raise HTTPException(status_code=500, detail="Model not loaded. Server starting up.")
+        raise HTTPException(status_code=500, detail="Model artifacts not loaded. Server starting up.")
 
     naics_code = int(request.industry)
     state_code = request.state.upper()
     employer_name = request.employer_name.strip().upper() if request.employer_name else None
 
-    # -- National average (across all industries) --
-    national_avg = float(naics_df["avg_approval_rate"].mean())
+    national_avg = float(np.average(naics_df["avg_approval_rate"], weights=naics_df["total_cases"]))
+    state_national_avg = float(np.average(state_df["avg_approval_rate"], weights=state_df["total_cases"]))
 
     explanation = []
     low_confidence = False
     employer_match = True
 
-    # -- Industry stats --
-    naics_row = naics_df[naics_df["naics"] == naics_code]
-    if naics_row.empty:
+    naics_row_df = naics_df[naics_df["naics"] == naics_code]
+    if naics_row_df.empty:
+        naics_row = None
         industry_rate = national_avg
         industry_total = 0
         industry_label = f"Industry {naics_code}"
-        explanation.append(f"Industry code {naics_code} not found; using national average")
+        industry_risk_tier = "Unknown"
         low_confidence = True
+        explanation.append(f"Industry code {naics_code} was not found; national averages were used.")
     else:
-        industry_rate = float(naics_row.iloc[0]["avg_approval_rate"])
-        industry_total = int(naics_row.iloc[0]["total_cases"])
-        industry_label = NAICS_LABELS.get(naics_code, f"Industry {naics_code}")
-        if industry_total < 5:
+        naics_row = naics_row_df.iloc[0]
+        industry_rate = float(naics_row["avg_approval_rate"])
+        industry_total = int(naics_row["total_cases"])
+        industry_label = str(naics_row.get("label") or NAICS_LABELS.get(naics_code, f"Industry {naics_code}"))
+        industry_risk_tier = str(naics_row.get("risk_tier") or "Unknown")
+        if industry_total < 50:
             low_confidence = True
-            explanation.append(f"{industry_label}: only {industry_total} cases (limited data)")
+            explanation.append(f"{industry_label}: limited sample size ({industry_total:,} cases).")
         else:
-            comp = "above" if industry_rate > national_avg else "below"
+            comp = "above" if industry_rate >= national_avg else "below"
             explanation.append(
-                f"{industry_label}: {industry_rate*100:.1f}% approval ({comp} {national_avg*100:.1f}% national avg)"
+                f"{industry_label}: {industry_rate * 100:.1f}% average approval rate, {comp} the national average."
             )
 
-    # -- State stats --
-    state_row = state_df[state_df["state"] == state_code]
-    if state_row.empty:
-        state_rate = national_avg
+    state_row_df = state_df[state_df["state"] == state_code]
+    if state_row_df.empty:
+        state_rate = state_national_avg
         state_total = 0
-        explanation.append(f"State {state_code} not found; using national average")
+        explanation.append(f"State {state_code} was not found; all-state average was used.")
     else:
-        state_rate = float(state_row.iloc[0]["avg_approval_rate"])
-        state_total = int(state_row.iloc[0]["total_cases"])
-        explanation.append(f"{state_code}: {state_rate*100:.1f}% approval rate ({state_total:,} cases)")
+        state_row = state_row_df.iloc[0]
+        state_rate = float(state_row["avg_approval_rate"])
+        state_total = int(state_row["total_cases"])
+        explanation.append(f"{state_code}: {state_rate * 100:.1f}% average approval rate across {state_total:,} cases.")
 
-    # National average for state comparison
-    state_national_avg = float(state_df["avg_approval_rate"].mean())
-
-    # -- Employer stats --
-    emp_rate = None
-    emp_total_cases = 1
-    emp_years_active = 1
-    emp_size_encoded = 0
-    emp_approval_for_model = industry_rate  # default
+    employer_rate = None
+    employer_total = None
+    employer_years = None
+    base_total_cases = _safe_float(naics_row, "avg_total_cases", 1.0)
+    log_petitions = _safe_float(naics_row, "avg_log_petitions", np.log1p(base_total_cases))
+    initial_share = _safe_float(naics_row, "avg_initial_share", 0.5)
+    continuation_share = _safe_float(naics_row, "avg_continuation_share", 0.5)
 
     if employer_name:
-        emp_row = employer_df[employer_df["employer"] == employer_name]
-        if emp_row.empty:
+        emp_row_df = employer_df[employer_df["employer"] == employer_name]
+        if emp_row_df.empty:
             employer_match = False
-            explanation.append(f"Employer '{request.employer_name}' not found in database")
+            explanation.append(f"Employer '{request.employer_name}' was not found; industry-level filing mix was used.")
         else:
-            employer_match = True
-            emp_rate = float(emp_row.iloc[0]["approval_rate"])
-            emp_total_cases = int(emp_row.iloc[0]["total_cases"])
-            emp_years_active = int(emp_row.iloc[0]["years_active"])
-            emp_approval_for_model = emp_rate
-            if emp_total_cases > 50:
-                emp_size_encoded = 2
-            elif emp_total_cases >= 5:
-                emp_size_encoded = 1
+            emp_row = emp_row_df.iloc[0]
+            employer_rate = float(emp_row["approval_rate"])
+            employer_total = int(emp_row["total_cases"])
+            employer_years = int(emp_row["years_active"])
+            base_total_cases = float(emp_row["total_cases"])
+            log_petitions = _safe_float(emp_row, "log_petitions", np.log1p(base_total_cases))
+            initial_share = _safe_float(emp_row, "initial_share", initial_share)
+            continuation_share = _safe_float(emp_row, "continuation_share", continuation_share)
             explanation.append(
-                f"{request.employer_name}: {emp_rate*100:.1f}% across {emp_total_cases:,} cases ({emp_years_active} yrs)"
+                f"{request.employer_name}: {employer_rate * 100:.1f}% average approval rate across "
+                f"{employer_total:,} cases and {employer_years} active fiscal years."
             )
 
-    # -- Percentile: what fraction of employers have a WORSE combined rate? --
-    # Approximate: use the combined (industry+state+employer) average
-    user_combined = np.mean([industry_rate, state_rate, emp_approval_for_model])
-    # Compare to all employers' approval rates
+    prediction_year = int(model_meta.get("validation_year", 2025))
+    feature_values = {
+        "fiscal_year": prediction_year,
+        "total_cases": base_total_cases,
+        "log_petitions": log_petitions,
+        "initial_share": initial_share,
+        "continuation_share": continuation_share,
+        "missing_state_flag": 0,
+        "missing_naics_flag": 0 if naics_row is not None else 1,
+        "industry_mean_rate": _safe_float(naics_row, "industry_mean_rate", industry_rate),
+        "industry_std": _safe_float(naics_row, "industry_std", 0.0),
+        "industry_cv": _safe_float(naics_row, "industry_cv", 0.0),
+        "industry_employer_count": _safe_float(naics_row, "industry_employer_count", 0.0),
+        "industry_total_cases": _safe_float(naics_row, "industry_total_cases", industry_total),
+        "state": state_code,
+    }
+
+    feature_frame = pd.DataFrame([feature_values])
+    high_risk_probability = float(risk_model.predict_proba(feature_frame[RISK_FEATURES])[0][1])
+    expected_approval_rate = float(np.clip(approval_model.predict(feature_frame[REGRESSION_FEATURES])[0], 0, 1))
+    risk_level = _risk_level(high_risk_probability)
+
     all_rates = employer_df["approval_rate"].dropna().values
-    percentile = float(np.mean(all_rates <= user_combined) * 100)
-
-    # -- Build feature vector & predict --
-    naics_std = 0.3  # approximation
-    features = np.array([[
-        2025, industry_rate, naics_std,
-        emp_approval_for_model, emp_total_cases, emp_years_active,
-        emp_size_encoded, state_rate, state_total,
-    ]])
-    probability = float(model.predict_proba(features)[0][1])
-
-    if probability >= 0.80:
-        risk_level = "low"
-    elif probability >= 0.50:
-        risk_level = "medium"
-    else:
-        risk_level = "high"
+    comparison_rate = employer_rate if employer_rate is not None else expected_approval_rate
+    percentile = float(np.mean(all_rates <= comparison_rate) * 100)
 
     return {
-        "probability": round(probability, 4),
+        "probability": round(expected_approval_rate, 4),
+        "expected_approval_rate": round(expected_approval_rate, 4),
+        "high_risk_probability": round(high_risk_probability, 4),
         "risk_level": risk_level,
+        "industry_risk_tier": industry_risk_tier,
         "explanation": explanation,
         "low_confidence": low_confidence,
         "employer_match": employer_match,
-        # Detailed breakdown for frontend display
         "industry_rate": round(industry_rate, 4),
         "industry_label": industry_label,
         "industry_total": industry_total,
         "state_rate": round(state_rate, 4),
         "state_code": state_code,
         "state_total": state_total,
-        "employer_rate": round(emp_rate, 4) if emp_rate is not None else None,
-        "employer_total": emp_total_cases if emp_rate is not None else None,
-        "employer_years": emp_years_active if emp_rate is not None else None,
+        "employer_rate": round(employer_rate, 4) if employer_rate is not None else None,
+        "employer_total": employer_total,
+        "employer_years": employer_years,
         "national_avg": round(national_avg, 4),
         "state_national_avg": round(state_national_avg, 4),
         "percentile": round(percentile, 1),
+        "model_summary": {
+            "source_project": model_meta.get("source_project", "H1B-Sponsorship-Analytics"),
+            "risk_model": model_meta.get("risk_model", "Binary Logistic Regression"),
+            "approval_model": model_meta.get("approval_model", "XGBoost Regressor"),
+            "train_years": model_meta.get("train_years", [2021, 2022, 2023, 2024]),
+            "validation_year": model_meta.get("validation_year", 2025),
+        },
     }
