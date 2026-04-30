@@ -1,4 +1,4 @@
-# Visa Navigator
+# VisaPath Analytics
 
 Full-stack web app helping international students navigate the U.S. work visa process from OPT to STEM OPT to H-1B.
 
@@ -10,7 +10,7 @@ Backend API: [https://visa-navigator.onrender.com](https://visa-navigator.onrend
 ## Project Structure
 
 ```text
-visa-navigator/
+VisaPath-Analytics/
   data/                  # Local model input data, ignored by git
   ml/                    # Artifact-building scripts
   backend/               # FastAPI application
@@ -27,6 +27,10 @@ visa-navigator/
   docs/                  # Screenshots and documentation assets
   README.md
 ```
+
+## Recognition
+
+This project was selected as a **Runner-up at Berkeley SkyDeck Demo Day**, where it was presented as a startup-style product concept for helping international students make more data-informed visa and sponsorship decisions.
 
 ## Tech Stack
 
