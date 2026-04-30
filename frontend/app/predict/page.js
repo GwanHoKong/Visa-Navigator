@@ -115,7 +115,7 @@ export default function PredictPage() {
             <>
               <div className="predict-form-grid">
                 <div>
-                  <label className="form-label">Major / Field of Study</label>
+                  <label className="form-label">Major / Field of Study <span style={{ color: "var(--gray-400)", fontWeight: 400 }}>(in development)</span></label>
                   <input className="form-input" placeholder="e.g. Computer Science" value={form.major} onChange={update("major")} />
                 </div>
                 <div>
@@ -135,11 +135,11 @@ export default function PredictPage() {
                   </select>
                 </div>
                 <div>
-                  <label className="form-label">Current GPA</label>
+                  <label className="form-label">Current GPA <span style={{ color: "var(--gray-400)", fontWeight: 400 }}>(in development)</span></label>
                   <input className="form-input" type="number" step="0.1" min="0" max="4.0" value={form.gpa} onChange={update("gpa")} />
                 </div>
                 <div>
-                  <label className="form-label">Work Experience (years)</label>
+                  <label className="form-label">Work Experience <span style={{ color: "var(--gray-400)", fontWeight: 400 }}>(in development)</span></label>
                   <select className="form-select" value={form.experience} onChange={update("experience")}>
                     <option value="0">Less than 1 year</option>
                     <option value="1">1-2 years</option>
@@ -148,7 +148,7 @@ export default function PredictPage() {
                   </select>
                 </div>
                 <div>
-                  <label className="form-label">Internship Experience</label>
+                  <label className="form-label">Internship Experience <span style={{ color: "var(--gray-400)", fontWeight: 400 }}>(in development)</span></label>
                   <select className="form-select" value={form.internships} onChange={update("internships")}>
                     <option value="0">No internships</option>
                     <option value="1">1 internship</option>
@@ -175,9 +175,8 @@ export default function PredictPage() {
               {/* Transparency notice */}
               <div style={{ marginTop: "0.75rem", padding: "0.75rem 1rem", background: "var(--blue-light)", borderRadius: "var(--radius-sm)", border: "1px solid var(--blue-border)" }}>
                 <p style={{ fontSize: "0.78rem", color: "var(--gray-600)", margin: 0 }}>
-                  ℹ️ <strong>What our model analyzes:</strong> Industry, State, and Employer historical approval data from USCIS.
-                  Personal factors (Major, GPA, Experience, Internships) are shown for your reference but do <strong>not</strong> affect the data-driven risk score below.
-                  The risk assessment is based purely on historical H-1B approval records.
+                  ℹ️ <strong>Personalization model in development:</strong> The current risk score uses Industry, State, and Employer historical approval data from USCIS.
+                  Major, GPA, work experience, and internship experience are collected for the planned personalization layer, but they do <strong>not</strong> affect the current model output yet.
                 </p>
               </div>
 
