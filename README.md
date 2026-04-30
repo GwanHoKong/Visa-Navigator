@@ -7,6 +7,15 @@ Features include visa guides with checklists, interactive timelines, company rec
 Live demo: [https://visanavigator-black.vercel.app](https://visanavigator-black.vercel.app)  
 Backend API: [https://visa-navigator.onrender.com](https://visa-navigator.onrender.com)
 
+## Portfolio Connection
+
+This app is the **productized deployment layer** for [H1B Sponsorship Analytics](https://github.com/GwanHoKong/H1B-Sponsorship-Analytics), the companion data science project that cleans USCIS employer data, engineers leakage-controlled features, and validates the dual-track H-1B sponsorship models.
+
+Together, the two projects show the full path from data science to product deployment:
+
+1. **H1B Sponsorship Analytics:** research, data pipeline, EDA, feature engineering, and model validation.
+2. **VisaPath Analytics:** full-stack product experience that exposes the model through visa planning workflows, company recommendations, and sponsorship risk insights.
+
 ## Project Structure
 
 ```text
